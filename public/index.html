@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro e Listagem de Pessoa</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="container mt-5">
+    <h2>Cadastro de Pessoa</h2>
+    <form id="cadastroPessoa">
+      <div class="form-group">
+        <label for="nome">Nome</label>
+        <input type="text" class="form-control" id="nome" required>
+      </div>
+      <div class="form-group">
+        <label for="cpf">CPF</label>
+        <input type="text" class="form-control" id="cpf" required>
+      </div>
+      <div class="form-group">
+        <label for="telefone">Telefone</label>
+        <input type="text" class="form-control" id="telefone">
+      </div>
+      <button type="submit" class="btn btn-primary">Cadastrar</button>
+    </form>
+    <div id="response" class="mt-3"></div>
+
+  </div>
+
+  <script>
+    document.getElementById('cadastroPessoa').addEventListener('submit', async function (event) {
+    event.preventDefault();
+
+    const nome = document.getElementById('nome').value;
+    const cpf = document.getElementById('cpf').value;
+    const telefone = document.getElementById('telefone').value;
+
+    const responseElement = document.getElementById('response');
+
+    try {
+      const response = await fetch('http://localhost:3000/pessoa', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          nome: nome,
+          cpf: cpf,
+          telefone: telefone
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        responseElement.innerHTML = `<div class="alert alert-success">Pessoa cadastrada com sucesso: ${data.nome}</div>`;
+      } else {
+        responseElement.innerHTML = `<div class="alert alert-danger">Erro: ${data.error}</div>`;
+      }
+    } catch (error) {
+      responseElement.innerHTML = `<div class="alert alert-danger">Erro ao conectar com o servidor</div>`;
+    }
+  });
+
+  </script>
+</body>
+</html>
